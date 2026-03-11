@@ -7,7 +7,7 @@ interface Phase {
   title: string;
   subtitle: string;
   icon: string;
-  color: string;
+  badge: string;
   timeline: string;
   tasks: { label: string; done: boolean }[];
   details: string[];
@@ -25,7 +25,7 @@ const PHASES: Phase[] = [
     title: "Thesis Publication",
     subtitle: "Open Access & Academic Repositories",
     icon: "📚",
-    color: "from-indigo-500 to-violet-600",
+    badge: "badge-phase-1",
     timeline: "Month 1–2",
     tasks: [
       { label: "Upload to Zenodo (DOI + CC-BY)", done: false },
@@ -47,7 +47,7 @@ const PHASES: Phase[] = [
     title: "Practical Book",
     subtitle: "Amazon KDP Self-Publishing",
     icon: "📖",
-    color: "from-emerald-500 to-teal-600",
+    badge: "badge-phase-2",
     timeline: "Month 2–5",
     tasks: [
       { label: "Restructure thesis → practitioner framework", done: false },
@@ -71,7 +71,7 @@ const PHASES: Phase[] = [
     title: "Article Series",
     subtitle: "Tier-1 Publication Pitches",
     icon: "✍️",
-    color: "from-amber-500 to-orange-600",
+    badge: "badge-phase-3",
     timeline: "Month 3–12",
     tasks: [
       { label: "Pitch HBR (Quantum Intelligence framework)", done: false },
@@ -113,7 +113,9 @@ function getProgress(phases: Phase[]) {
   return total ? Math.round((done / total) * 100) : 0;
 }
 
-/* ─── Components ─── */
+/* ══════════════════════════════════════════════════════════════
+   COMPONENTS — Apple × Nike × BMW
+   ══════════════════════════════════════════════════════════════ */
 
 function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
   const [pw, setPw] = useState("");
@@ -128,11 +130,26 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950 z-50">
-      <div className={`glass-strong rounded-3xl p-10 max-w-md w-full mx-6 text-center animate-fade-in ${error ? "animate-shake" : ""}`}>
-        <div className="text-5xl mb-4">🔐</div>
-        <h1 className="text-2xl font-bold text-white mb-2">Quantum Intelligence</h1>
-        <p className="text-indigo-300/70 text-sm mb-8">Enter the passphrase to access the strategy dashboard</p>
+    <div className="fixed inset-0 flex items-center justify-center z-50 noise"
+         style={{ background: "linear-gradient(145deg, #0a0a1a 0%, #0f0f2e 40%, #0a0a1a 100%)" }}>
+      {/* Ambient glow orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-10"
+             style={{ background: "radial-gradient(circle, rgba(99,102,241,0.6) 0%, transparent 70%)", filter: "blur(80px)" }} />
+        <div className="absolute bottom-1/3 right-1/4 w-80 h-80 rounded-full opacity-8"
+             style={{ background: "radial-gradient(circle, rgba(139,92,246,0.5) 0%, transparent 70%)", filter: "blur(80px)" }} />
+      </div>
+
+      <div className={`glass-strong rounded-3xl p-10 max-w-sm w-full mx-6 text-center animate-scale-in relative z-10 ${error ? "animate-shake" : ""}`}>
+        {/* Logo mark */}
+        <div className="w-20 h-20 mx-auto mb-6 rounded-2xl flex items-center justify-center animate-float"
+             style={{ background: "linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.15))", border: "1px solid rgba(99,102,241,0.2)" }}>
+          <span className="text-4xl">⚛️</span>
+        </div>
+
+        <h1 className="text-2xl font-bold text-gradient mb-1 tracking-tight">Quantum Intelligence</h1>
+        <p className="text-sm opacity-40 mb-8">Enter passphrase to continue</p>
+
         <input
           ref={inputRef}
           type="password"
@@ -140,12 +157,15 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
           onChange={(e) => setPw(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && submit()}
           placeholder="Secret passphrase…"
-          className={`w-full px-5 py-3.5 rounded-xl bg-white/5 border text-white placeholder-white/30 outline-none transition-all focus:ring-2 focus:ring-indigo-500/50 ${error ? "border-red-500/60" : "border-white/10"}`}
+          className={`glass-input mb-2 ${error ? "!border-red-500/60" : ""}`}
         />
-        {error && <p className="text-red-400 text-xs mt-2 animate-fade-in">Incorrect passphrase. Try again.</p>}
-        <button onClick={submit} className="mt-5 w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 text-white font-semibold hover:opacity-90 transition-all glow-accent">
-          Unlock Dashboard
+        {error && <p className="text-red-400 text-xs mb-3 animate-fade-in">Incorrect passphrase</p>}
+
+        <button onClick={submit} className="btn-primary w-full mt-4">
+          Unlock
         </button>
+
+        <p className="text-[10px] opacity-20 mt-6 tracking-widest uppercase">Monks × Remco Vroom</p>
       </div>
     </div>
   );
@@ -153,11 +173,18 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
 
 function ThemeToggle({ theme, toggle }: { theme: string; toggle: () => void }) {
   return (
-    <button onClick={toggle} className="glass rounded-full p-2.5 hover:scale-105 transition-transform" aria-label="Toggle theme">
+    <button onClick={toggle}
+      className="glass w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all touch-target"
+      aria-label="Toggle theme"
+    >
       {theme === "dark" ? (
-        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-amber-300"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-amber-300">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
       ) : (
-        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-indigo-600"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-indigo-600">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
       )}
     </button>
   );
@@ -165,13 +192,13 @@ function ThemeToggle({ theme, toggle }: { theme: string; toggle: () => void }) {
 
 function ProgressBar({ value }: { value: number }) {
   return (
-    <div className="w-full">
-      <div className="flex justify-between text-xs mb-1.5">
-        <span className="text-current opacity-60">Overall Progress</span>
-        <span className="font-semibold">{value}%</span>
+    <div className="glass-card rounded-2xl p-5">
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-xs font-medium opacity-50 tracking-wide uppercase">Overall Progress</span>
+        <span className="text-lg font-bold text-gradient">{value}%</span>
       </div>
-      <div className="h-2.5 rounded-full bg-white/10 dark:bg-white/10 light:bg-black/5 overflow-hidden">
-        <div className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 progress-fill" style={{ width: `${value}%` }} />
+      <div className="progress-track">
+        <div className="progress-fill" style={{ width: `${value}%`, background: "linear-gradient(90deg, rgb(99,102,241), rgb(139,92,246), rgb(192,132,252))" }} />
       </div>
     </div>
   );
@@ -184,36 +211,55 @@ function PhaseCard({ phase, onToggleTask, onSelect, isSelected }: {
   const pct = Math.round((done / phase.tasks.length) * 100);
 
   return (
-    <div onClick={onSelect} className={`glass rounded-2xl p-6 cursor-pointer transition-all hover:scale-[1.01] ${isSelected ? "ring-2 ring-indigo-500/50 glow-accent" : ""}`}>
-      <div className="flex items-start justify-between mb-4">
-        <div>
-          <span className="text-3xl">{phase.icon}</span>
-          <h3 className="text-lg font-bold mt-2">{phase.title}</h3>
-          <p className="text-xs opacity-60">{phase.subtitle}</p>
+    <div
+      onClick={onSelect}
+      className={`glass-card rounded-2xl p-6 cursor-pointer ${isSelected ? "glow-accent !border-indigo-500/30" : ""}`}
+    >
+      {/* Header */}
+      <div className="flex items-start justify-between mb-5">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+               style={{ background: "rgba(var(--surface), 0.06)" }}>
+            {phase.icon}
+          </div>
+          <div>
+            <h3 className="text-base font-bold tracking-tight">{phase.title}</h3>
+            <p className="text-[11px] opacity-40 mt-0.5">{phase.subtitle}</p>
+          </div>
         </div>
-        <span className={`text-xs font-semibold px-3 py-1 rounded-full bg-gradient-to-r ${phase.color} text-white`}>{phase.timeline}</span>
+        <span className={`text-[11px] font-semibold px-3 py-1.5 rounded-full text-white ${phase.badge}`}>
+          {phase.timeline}
+        </span>
       </div>
 
-      <div className="mb-4">
-        <div className="flex justify-between text-xs mb-1">
-          <span className="opacity-50">{done}/{phase.tasks.length} tasks</span>
+      {/* Mini progress */}
+      <div className="mb-5">
+        <div className="flex justify-between text-[11px] mb-2">
+          <span className="opacity-40">{done}/{phase.tasks.length} tasks</span>
           <span className="font-semibold">{pct}%</span>
         </div>
-        <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
-          <div className={`h-full rounded-full bg-gradient-to-r ${phase.color} progress-fill`} style={{ width: `${pct}%` }} />
+        <div className="progress-track">
+          <div className="progress-fill" style={{ width: `${pct}%`, background: `var(--phase-${phase.id}-gradient, linear-gradient(90deg, rgb(99,102,241), rgb(139,92,246)))` }} />
         </div>
       </div>
 
-      <ul className="space-y-2">
+      {/* Task list */}
+      <ul className="space-y-2.5 stagger">
         {phase.tasks.map((t, i) => (
-          <li key={i} className="flex items-center gap-3 group">
+          <li key={i} className="flex items-center gap-3 group animate-fade-in">
             <button
               onClick={(e) => { e.stopPropagation(); onToggleTask(phase.id, i); }}
-              className={`w-5 h-5 rounded-md border flex-shrink-0 flex items-center justify-center transition-all ${t.done ? "bg-gradient-to-r " + phase.color + " border-transparent" : "border-white/20 hover:border-white/40"}`}
+              className={`checkbox-premium ${t.done ? "checked" : ""}`}
             >
-              {t.done && <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
+              {t.done && (
+                <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={3}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              )}
             </button>
-            <span className={`text-sm transition-all ${t.done ? "line-through opacity-40" : "opacity-80 group-hover:opacity-100"}`}>{t.label}</span>
+            <span className={`text-[13px] leading-snug transition-all ${t.done ? "line-through opacity-30" : "opacity-70 group-hover:opacity-100"}`}>
+              {t.label}
+            </span>
           </li>
         ))}
       </ul>
@@ -223,14 +269,22 @@ function PhaseCard({ phase, onToggleTask, onSelect, isSelected }: {
 
 function PhaseDetail({ phase }: { phase: Phase }) {
   return (
-    <div className="glass rounded-2xl p-6 animate-fade-in">
-      <h3 className="font-bold text-lg mb-1 flex items-center gap-2">{phase.icon} {phase.title} — Key Insights</h3>
-      <p className="text-xs opacity-50 mb-4">{phase.subtitle}</p>
-      <ul className="space-y-3">
+    <div className="glass-card rounded-2xl p-6 animate-slide-up">
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
+             style={{ background: "rgba(var(--surface), 0.06)" }}>
+          {phase.icon}
+        </div>
+        <div>
+          <h3 className="font-bold text-base tracking-tight">{phase.title}</h3>
+          <p className="text-[11px] opacity-40">Key insights & strategy</p>
+        </div>
+      </div>
+      <ul className="space-y-3 stagger">
         {phase.details.map((d, i) => (
-          <li key={i} className="flex gap-3 text-sm">
-            <span className={`mt-1 w-2 h-2 rounded-full bg-gradient-to-r ${phase.color} flex-shrink-0`} />
-            <span className="opacity-80">{d}</span>
+          <li key={i} className="flex gap-3 animate-fade-in">
+            <span className={`mt-1.5 w-2 h-2 rounded-full flex-shrink-0 ${phase.badge}`} />
+            <span className="text-[13px] leading-relaxed opacity-70">{d}</span>
           </li>
         ))}
       </ul>
@@ -240,19 +294,27 @@ function PhaseDetail({ phase }: { phase: Phase }) {
 
 function Timeline() {
   return (
-    <div className="glass rounded-2xl p-6">
-      <h3 className="font-bold text-lg mb-4">📅 12-Month Milestone Timeline</h3>
+    <div className="glass-card rounded-2xl p-6">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
+             style={{ background: "rgba(var(--surface), 0.06)" }}>📅</div>
+        <h3 className="font-bold text-base tracking-tight">12-Month Milestones</h3>
+      </div>
+
       <div className="relative">
-        <div className="absolute left-3 top-0 bottom-0 w-px bg-gradient-to-b from-indigo-500 via-emerald-500 to-amber-500 opacity-30" />
-        <div className="space-y-4">
+        {/* Timeline line */}
+        <div className="absolute left-[15px] top-2 bottom-2 w-[2px]"
+             style={{ background: "linear-gradient(to bottom, rgb(99,102,241), rgb(16,185,129), rgb(245,158,11), rgb(139,92,246))", opacity: 0.2 }} />
+
+        <div className="space-y-5 stagger">
           {MILESTONES.map((m, i) => (
-            <div key={i} className="flex items-center gap-4 pl-0 animate-fade-in" style={{ animationDelay: `${i * 80}ms` }}>
-              <div className="w-7 h-7 rounded-full glass flex items-center justify-center text-sm flex-shrink-0 z-10">{m.icon}</div>
+            <div key={i} className="flex items-center gap-4 animate-fade-in group">
+              <div className="w-8 h-8 rounded-full glass-card flex items-center justify-center text-sm flex-shrink-0 z-10 group-hover:scale-110 transition-transform">
+                {m.icon}
+              </div>
               <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold opacity-50">Month {m.month}</span>
-                </div>
-                <p className="text-sm opacity-80">{m.label}</p>
+                <span className="text-[10px] font-semibold opacity-30 uppercase tracking-widest">Month {m.month}</span>
+                <p className="text-[13px] opacity-70 group-hover:opacity-100 transition-opacity">{m.label}</p>
               </div>
             </div>
           ))}
@@ -271,13 +333,14 @@ function MetricsGrid({ phases }: { phases: Phase[] }) {
     { label: "Platforms", value: "6+", icon: "🌐" },
     { label: "Publications", value: "6", icon: "📰" },
   ];
+
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 stagger">
       {metrics.map((m, i) => (
-        <div key={i} className="glass rounded-xl p-4 text-center hover:scale-105 transition-transform cursor-default">
-          <div className="text-2xl mb-1">{m.icon}</div>
-          <div className="text-2xl font-bold">{m.value}</div>
-          <div className="text-xs opacity-50">{m.label}</div>
+        <div key={i} className="glass-card rounded-2xl p-5 text-center animate-fade-in group">
+          <div className="text-2xl mb-2 group-hover:scale-110 transition-transform inline-block">{m.icon}</div>
+          <div className="text-2xl font-bold tracking-tight">{m.value}</div>
+          <div className="text-[11px] opacity-35 mt-1 tracking-wide uppercase">{m.label}</div>
         </div>
       ))}
     </div>
@@ -286,7 +349,7 @@ function MetricsGrid({ phases }: { phases: Phase[] }) {
 
 function BrainstormPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [messages, setMessages] = useState<ChatMsg[]>([
-    { role: "assistant", content: "Hi Remco! 👋 I'm your AI brainstorm partner for the Quantum Intelligence publication strategy. Ask me anything — from refining your pitch angles to brainstorming chapter outlines, article hooks, or marketing tactics." },
+    { role: "assistant", content: "Hey Remco! 👋 I'm your AI brainstorm partner for the Quantum Intelligence publication strategy. Ask me anything — from refining your pitch angles to brainstorming chapter outlines, article hooks, or marketing tactics." },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -297,7 +360,7 @@ function BrainstormPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
 
-  useEffect(() => { if (isOpen) inputRef.current?.focus(); }, [isOpen]);
+  useEffect(() => { if (isOpen) setTimeout(() => inputRef.current?.focus(), 300); }, [isOpen]);
 
   const send = useCallback(async () => {
     if (!input.trim() || loading) return;
@@ -323,19 +386,30 @@ function BrainstormPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in" onClick={onClose}>
-      <div onClick={(e) => e.stopPropagation()} className="glass-strong rounded-t-3xl md:rounded-3xl w-full max-w-2xl h-[85vh] md:h-[70vh] flex flex-col animate-slide-up mobile-safe">
+    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center animate-fade-in"
+         style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
+         onClick={onClose}>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="glass-strong rounded-t-3xl md:rounded-3xl w-full max-w-2xl h-[85vh] md:h-[70vh] flex flex-col animate-slide-up mobile-safe"
+      >
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-white/10">
+        <div className="flex items-center justify-between p-5" style={{ borderBottom: "1px solid rgba(var(--surface), 0.08)" }}>
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-r from-indigo-500 to-violet-600 flex items-center justify-center text-white text-sm">🧠</div>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg"
+                 style={{ background: "linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.2))" }}>
+              🧠
+            </div>
             <div>
-              <h3 className="font-bold text-sm">AI Brainstorm</h3>
-              <p className="text-xs opacity-50">Powered by Claude</p>
+              <h3 className="font-bold text-sm tracking-tight">AI Brainstorm</h3>
+              <p className="text-[10px] opacity-30">Powered by Claude</p>
             </div>
           </div>
-          <button onClick={onClose} className="w-8 h-8 rounded-full glass flex items-center justify-center hover:scale-110 transition-transform">
-            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+          <button onClick={onClose}
+            className="w-9 h-9 rounded-full glass flex items-center justify-center hover:scale-110 active:scale-95 transition-all">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
@@ -343,14 +417,18 @@ function BrainstormPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
         <div ref={scrollRef} className="flex-1 overflow-y-auto p-5 space-y-4">
           {messages.map((m, i) => (
             <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"} animate-fade-in`}>
-              <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm whitespace-pre-wrap ${m.role === "user" ? "bg-gradient-to-r from-indigo-500 to-violet-600 text-white" : "glass"}`}>
+              <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-[13px] leading-relaxed whitespace-pre-wrap ${
+                m.role === "user"
+                  ? "btn-primary !rounded-2xl !p-4 !cursor-default"
+                  : "chat-bubble-ai glass"
+              }`}>
                 {m.content}
               </div>
             </div>
           ))}
           {loading && (
             <div className="flex justify-start animate-fade-in">
-              <div className="glass rounded-2xl px-4 py-3 flex gap-1.5">
+              <div className="glass rounded-2xl px-5 py-4 flex gap-2">
                 <span className="w-2 h-2 rounded-full bg-indigo-400 typing-dot" />
                 <span className="w-2 h-2 rounded-full bg-indigo-400 typing-dot" />
                 <span className="w-2 h-2 rounded-full bg-indigo-400 typing-dot" />
@@ -360,7 +438,7 @@ function BrainstormPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
         </div>
 
         {/* Input */}
-        <div className="p-4 border-t border-white/10">
+        <div className="p-4" style={{ borderTop: "1px solid rgba(var(--surface), 0.08)" }}>
           <div className="flex gap-2">
             <input
               ref={inputRef}
@@ -368,15 +446,18 @@ function BrainstormPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && send()}
               placeholder="Ask about pitches, chapters, strategy…"
-              className="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-current placeholder-current/30 outline-none focus:ring-2 focus:ring-indigo-500/50 text-sm"
+              className="glass-input flex-1 !py-3 !text-[13px]"
             />
-            <button onClick={send} disabled={loading || !input.trim()} className="px-5 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 text-white font-semibold disabled:opacity-30 hover:opacity-90 transition-all text-sm">
+            <button onClick={send} disabled={loading || !input.trim()}
+              className="btn-primary !px-6 !py-3 !rounded-xl disabled:opacity-20 !text-[13px]">
               Send
             </button>
           </div>
-          <div className="flex gap-2 mt-2 overflow-x-auto pb-1">
+          {/* Quick prompts */}
+          <div className="flex gap-2 mt-3 overflow-x-auto pb-1 -mx-1 px-1">
             {["Pitch angle for HBR?", "Book chapter ideas", "LinkedIn content plan", "Differentiation strategy"].map((q) => (
-              <button key={q} onClick={() => { setInput(q); }} className="text-xs px-3 py-1.5 rounded-full glass whitespace-nowrap hover:scale-105 transition-transform">
+              <button key={q} onClick={() => setInput(q)}
+                className="btn-ghost !px-3.5 !py-2 !rounded-full whitespace-nowrap !text-[11px] hover:scale-105 active:scale-95 transition-transform">
                 {q}
               </button>
             ))}
@@ -387,13 +468,17 @@ function BrainstormPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
   );
 }
 
-/* ─── Main Page ─── */
+/* ══════════════════════════════════════════════════════════════
+   MAIN — Orchestrator
+   ══════════════════════════════════════════════════════════════ */
+
 export default function Home() {
   const [unlocked, setUnlocked] = useState(false);
   const [theme, setTheme] = useState("dark");
   const [phases, setPhases] = useState(PHASES);
   const [selectedPhase, setSelectedPhase] = useState<number | null>(null);
   const [brainstormOpen, setBrainstormOpen] = useState(false);
+  const [activeView, setActiveView] = useState<"phases" | "timeline">("phases");
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -417,87 +502,133 @@ export default function Home() {
   const selected = phases.find((p) => p.id === selectedPhase) || null;
 
   return (
-    <div className={`min-h-screen transition-colors duration-500 ${theme === "dark" ? "bg-gradient-to-br from-slate-950 via-indigo-950/50 to-slate-950 text-white" : "bg-gradient-to-br from-slate-50 via-indigo-50/50 to-white text-slate-900"}`}>
-      {/* Header */}
-      <header className="sticky top-0 z-40 glass border-b border-white/5">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div className={`min-h-screen transition-colors duration-700 noise ${
+      theme === "dark"
+        ? "text-white"
+        : "text-slate-900"
+    }`} style={{
+      background: theme === "dark"
+        ? "linear-gradient(145deg, #050510 0%, #0a0a2e 30%, #0c0c24 60%, #050510 100%)"
+        : "linear-gradient(145deg, #f8fafc 0%, #eef2ff 40%, #f8fafc 100%)"
+    }}>
+
+      {/* ─── Ambient glow orbs (dark only) ─── */}
+      {theme === "dark" && (
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full"
+               style={{ background: "radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 60%)", filter: "blur(100px)" }} />
+          <div className="absolute top-1/2 -left-40 w-[500px] h-[500px] rounded-full"
+               style={{ background: "radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 60%)", filter: "blur(100px)" }} />
+          <div className="absolute -bottom-40 right-1/3 w-[400px] h-[400px] rounded-full"
+               style={{ background: "radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 60%)", filter: "blur(100px)" }} />
+        </div>
+      )}
+
+      {/* ─── Header ─── */}
+      <header className="sticky top-0 z-40 glass" style={{ borderBottom: "1px solid rgba(var(--surface), 0.05)" }}>
+        <div className="max-w-6xl mx-auto px-5 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-xl">⚛️</span>
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg"
+                 style={{ background: "linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.15))" }}>
+              ⚛️
+            </div>
             <div>
-              <h1 className="font-bold text-sm md:text-base">Quantum Intelligence</h1>
-              <p className="text-[10px] opacity-40">Publication Strategy Dashboard</p>
+              <h1 className="font-bold text-sm tracking-tight">Quantum Intelligence</h1>
+              <p className="text-[10px] opacity-30 tracking-wide">Publication Strategy</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <button onClick={() => setBrainstormOpen(true)} className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-indigo-500 to-violet-600 text-white text-xs font-semibold hover:opacity-90 transition-all glow-pulse">
-              🧠 AI Brainstorm
+
+          <div className="flex items-center gap-2.5">
+            {/* Desktop brainstorm button */}
+            <button onClick={() => setBrainstormOpen(true)}
+              className="hidden md:flex items-center gap-2 btn-primary !py-2.5 !px-5 !rounded-full !text-[12px] glow-pulse">
+              <span>🧠</span>
+              <span>AI Brainstorm</span>
             </button>
             <ThemeToggle theme={theme} toggle={toggleTheme} />
           </div>
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-8 space-y-8">
-        {/* Hero */}
-        <section className="text-center py-6 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-bold mb-2">
+      <main className="max-w-6xl mx-auto px-5 py-8 space-y-8 relative z-10">
+
+        {/* ─── Hero ─── */}
+        <section className="text-center py-8 animate-fade-in">
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-gradient leading-tight">
             Publication Strategy
           </h2>
-          <p className="opacity-50 text-sm max-w-xl mx-auto">
+          <p className="opacity-40 text-sm max-w-lg mx-auto mt-4 leading-relaxed">
             From defended thesis to global thought leadership — your 12-month roadmap to publishing, launching, and dominating the conversation on AI-first marketing.
           </p>
         </section>
 
-        {/* Progress */}
+        {/* ─── Progress ─── */}
         <section className="animate-fade-in" style={{ animationDelay: "100ms" }}>
           <ProgressBar value={progress} />
         </section>
 
-        {/* Metrics */}
+        {/* ─── Metrics ─── */}
         <section className="animate-fade-in" style={{ animationDelay: "200ms" }}>
           <MetricsGrid phases={phases} />
         </section>
 
-        {/* Phase Cards */}
-        <section className="grid md:grid-cols-3 gap-4">
-          {phases.map((p, i) => (
-            <div key={p.id} className="animate-fade-in" style={{ animationDelay: `${300 + i * 100}ms` }}>
-              <PhaseCard
-                phase={p}
-                onToggleTask={toggleTask}
-                onSelect={() => setSelectedPhase(selectedPhase === p.id ? null : p.id)}
-                isSelected={selectedPhase === p.id}
-              />
-            </div>
-          ))}
+        {/* ─── Pill Navigation ─── */}
+        <section className="flex justify-center animate-fade-in" style={{ animationDelay: "250ms" }}>
+          <div className="pill-nav">
+            <button className={activeView === "phases" ? "active" : ""} onClick={() => setActiveView("phases")}>
+              Phases & Tasks
+            </button>
+            <button className={activeView === "timeline" ? "active" : ""} onClick={() => setActiveView("timeline")}>
+              Timeline
+            </button>
+          </div>
         </section>
 
-        {/* Detail Panel */}
-        {selected && (
-          <section>
-            <PhaseDetail phase={selected} />
+        {/* ─── Content Area ─── */}
+        {activeView === "phases" ? (
+          <>
+            {/* Phase Cards */}
+            <section className="grid md:grid-cols-3 gap-4">
+              {phases.map((p, i) => (
+                <div key={p.id} className="animate-fade-in" style={{ animationDelay: `${300 + i * 100}ms` }}>
+                  <PhaseCard
+                    phase={p}
+                    onToggleTask={toggleTask}
+                    onSelect={() => setSelectedPhase(selectedPhase === p.id ? null : p.id)}
+                    isSelected={selectedPhase === p.id}
+                  />
+                </div>
+              ))}
+            </section>
+
+            {/* Detail Panel */}
+            {selected && (
+              <section>
+                <PhaseDetail phase={selected} />
+              </section>
+            )}
+          </>
+        ) : (
+          <section className="animate-fade-in">
+            <Timeline />
           </section>
         )}
 
-        {/* Timeline */}
-        <section className="animate-fade-in" style={{ animationDelay: "600ms" }}>
-          <Timeline />
-        </section>
-
-        {/* Footer */}
-        <footer className="text-center py-8 opacity-30 text-xs">
-          <p>Quantum Intelligence © {new Date().getFullYear()} Remco Vroom — Monks</p>
-          <p className="mt-1">Built with Next.js · Deployed on Vercel</p>
+        {/* ─── Footer ─── */}
+        <footer className="text-center py-10 opacity-20 text-[11px] tracking-widest uppercase">
+          <p>Quantum Intelligence © {new Date().getFullYear()} Remco Vroom</p>
+          <p className="mt-1 opacity-50">Monks · Next.js · Vercel</p>
         </footer>
       </main>
 
-      {/* AI Brainstorm Panel */}
+      {/* ─── AI Brainstorm Panel ─── */}
       <BrainstormPanel isOpen={brainstormOpen} onClose={() => setBrainstormOpen(false)} />
 
-      {/* Floating Brainstorm FAB (mobile) */}
+      {/* ─── Floating FAB (mobile) ─── */}
       <button
         onClick={() => setBrainstormOpen(true)}
-        className="md:hidden fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-r from-indigo-500 to-violet-600 text-white text-xl flex items-center justify-center shadow-xl glow-pulse z-30"
+        className="md:hidden fixed bottom-6 right-6 w-14 h-14 rounded-2xl flex items-center justify-center text-xl shadow-2xl glow-pulse z-30 active:scale-90 transition-transform"
+        style={{ background: "linear-gradient(135deg, rgb(99,102,241), rgb(139,92,246))", boxShadow: "0 8px 30px rgba(99,102,241,0.4)" }}
         aria-label="Open AI Brainstorm"
       >
         🧠
